@@ -33,6 +33,9 @@
 	$f_project_id = gpc_get_int( 'project_id', null );
 	$f_version_id = gpc_get_int( 'version_id', null );
 	$f_inherited = gpc_get_bool( 'inherited', true );
+	$f_start_index = gpc_get_int( 'start_index', -1 );
+	$f_length      = gpc_get_int( 'length', null );
+	$f_slice       = gpc_get_int( 'slice', null );
 	
 	if ( null != $f_project_id && null != $f_version_id ) {
   	# gather the data for the graphs
@@ -48,6 +51,15 @@
 //    
 //   	gantt_chart_simple_example();//DEBUG: This one is OK
 //   	gantt_chart_simple_example2( $t_metrics, $f_project_id, version_full_name( $f_version_id, /* showProject */ $f_inherited, $f_project_id ) );//DEBUG: This is OK
-  	gantt_table( $t_metrics, project_get_name( $f_project_id ), version_full_name( $f_version_id, /* showProject */ $f_inherited, $f_project_id ) );
+	  	
+	  $t_gantt_chart_title = project_get_name( $f_project_id );
+	  $t_gantt_chart_subtitle = version_full_name( $f_version_id, /* showProject */ $f_inherited, $f_project_id );
+	  	
+  	if ( $f_start_index != -1 && $f_length != null ){
+  	  $t_metrics['metrics'] = array_slice( $t_metrics['metrics'], $f_start_index, $f_length );
+  	  $t_gantt_chart_subtitle .= " (" . plugin_lang_get ( 'part' ) . $f_slice . ")";
+	  }
+	  	  
+  	gantt_table( $t_metrics, $t_gantt_chart_title, $t_gantt_chart_subtitle );
   }
 ?>

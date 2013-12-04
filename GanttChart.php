@@ -18,7 +18,7 @@ if ( false === include_once( config_get( 'plugin_path' ) . 'MantisGraph/MantisGr
 	return;
 }
 
-class MantisGanttChartPlugin extends MantisGraphPlugin  {
+class GanttChartPlugin extends MantisGraphPlugin  {
 
 	/**
 	 *  A method that populates the plugin information and minimum requirements.
@@ -28,7 +28,7 @@ class MantisGanttChartPlugin extends MantisGraphPlugin  {
 		$this->description = lang_get( 'plugin_ganttchart_description' );
 		$this->page = 'config';
 
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->requires = array(
 			'MantisCore' => '1.2.0',
 			'MantisGraph' => '1.0',
@@ -36,7 +36,7 @@ class MantisGanttChartPlugin extends MantisGraphPlugin  {
 
 		$this->author = 'Alain D\'EURVEILHER';
 		$this->contact = 'alain.deurveilher@gmail.com';
-		$this->url = 'http://bozz.974.free.fr/';
+		$this->url = 'http://alaind.eu/';
 	}
 
 	/**
@@ -52,13 +52,14 @@ class MantisGanttChartPlugin extends MantisGraphPlugin  {
 			'eczlibrary'	=> OFF,
 			'jpgraph_path' => '',
 			'rows_max' => 85,
-			'weeks_max' => 80,
+			'weeks_max' => 42, // 80
+			'label_max' => 120,
 		);
 	}
 	
 	function init() {
-		//mantisganttchart_autoload();
-		spl_autoload_register( array( 'MantisGanttChartPlugin', 'autoload' ) );
+		//ganttchart_autoload();
+		spl_autoload_register( array( 'GanttChartPlugin', 'autoload' ) );
 		
 		$t_path = config_get_global('plugin_path' ). plugin_get_current() . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR;
 
@@ -88,8 +89,8 @@ class MantisGanttChartPlugin extends MantisGraphPlugin  {
 		$t_links = array();
 
 		if ( plugin_config_get( 'show_gantt_roadmap_link' ) && access_has_project_level( config_get( 'view_summary_threshold' ) ) ) {
-			$t_page = plugin_page( 'summary_gantt_chart_page', false, 'MantisGanttChart' );
-			$t_lang = plugin_lang_get( 'menu', 'MantisGanttChart' );
+			$t_page = plugin_page( 'summary_gantt_chart_page', false, 'GanttChart' );
+			$t_lang = plugin_lang_get( 'menu', 'GanttChart' );
 			$t_links[] = "<a href=\"$t_page\">$t_lang</a>";
 		}
 
@@ -103,10 +104,11 @@ class MantisGanttChartPlugin extends MantisGraphPlugin  {
   
   
 	function ganttchart_filter_menu( ) {
-		return array( '<a href="' . plugin_page( 'filter_gantt_chart.php' ) . '" target="_blank">' . plugin_lang_get( 'gantt_bug_page_link' ) . '</a>', );
+            $f_page_number = gpc_get_int( 'page_number', 1 );
+            return array( '<a href="' . plugin_page( 'filter_gantt_chart.php&page_number=' . $f_page_number ) . '" target="_blank">' . plugin_lang_get( 'gantt_bug_page_link' ) . '</a>', );
 	}	
 
 }
 
-function mantisganttchart_autoload() {
+function ganttchart_autoload() {
 }

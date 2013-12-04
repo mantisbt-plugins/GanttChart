@@ -1,4 +1,7 @@
-Gantt Chart plugin for Mantis.
+GanttChart
+================
+
+Gantt Chart Plugin for Mantis
 By Alain D'EURVEILHER (alain.deurveilher@gmail.com)
 
 
@@ -6,5 +9,17 @@ This plugin is based on the Mantis Graph plugin. The jpgraph library is required
 The Gantt Chart plugin for mantis indeed uses the jpgraph_gantt.php lib.
 
 TODO: Complete the README file.
-TODO: Create the documentation.
-TODO: manage the gantt chart boundaries (should limit all the graphs to a max of 80 rows and 80 weeks for performance issues.)
+TODO: update the documentation.
+TODO: Comment the source code
+
++------------------------------------------------------------------------------+
+Version 1.1:
+
+Add boundaries to the graph to limit to configured range of rows, and weeks
+Updated the configuration page
+Add a small description and documentation
++------------------------------------------------------------------------------+
+Version 1.0:
+
+Creation of the plugin
++------------------------------------------------------------------------------+

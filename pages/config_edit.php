@@ -24,6 +24,9 @@ $f_use_due_date_field = gpc_get_int( 'use_due_date_field', OFF );
 $f_custom_field_id_for_duration = gpc_get_int( 'custom_field_id_for_duration', -1 );
 $f_use_start_date_field = gpc_get_int( 'use_start_date_field', ON );
 $f_custom_field_id_for_start_date = gpc_get_int( 'custom_field_id_for_start_date', -1 );
+$f_rows_max = gpc_get_int( 'rows_max', -1 );
+$f_weeks_max = gpc_get_int( 'weeks_max', -1 );
+$f_label_max = gpc_get_int( 'label_max', -1 );
 
 if ( plugin_config_get( 'show_gantt_roadmap_link' ) != $f_show_gantt_roadmap_link ) {
 	plugin_config_set( 'show_gantt_roadmap_link', $f_show_gantt_roadmap_link );
@@ -43,6 +46,18 @@ if ( plugin_config_get( 'use_start_date_field' ) != $f_use_start_date_field ) {
 
 if ( plugin_config_get( 'custom_field_id_for_start_date' ) != $f_custom_field_id_for_start_date ) {
 	plugin_config_set( 'custom_field_id_for_start_date', $f_custom_field_id_for_start_date );
+}
+
+if ( plugin_config_get( 'rows_max' ) != $f_rows_max ) {
+	plugin_config_set( 'rows_max', $f_rows_max );
+}
+
+if ( plugin_config_get( 'weeks_max' ) != $f_weeks_max ) {
+	plugin_config_set( 'weeks_max', $f_weeks_max);
+}
+
+if ( plugin_config_get( 'label_max' ) != $f_label_max ) {
+	plugin_config_set( 'label_max', $f_label_max );
 }
 
 if ( plugin_config_get( 'eczlibrary' ) != config_get( 'plugin_MantisGraph_eczlibrary' ) ) {

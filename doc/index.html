@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=windows-1250">
+  <meta name="generator" content="PSPad editor, www.pspad.com">
+  <title></title>
+  </head>
+  <body>
+    <h1>Gantt Chart Plugin for Mantis</h1>
+      <h2>1. Requirements</h2>
+        <ul>
+          <li>Mantis (tested on version 1.2.5, but should work on newer versions)</li>
+          <li>JPGraph</li>
+          <li>PHP: memory_limit set to at least 128M in php.ini</li>
+        </ul>
+      
+      <h2>2. Installation</h2>
+        <ul>
+          <li>Unzip and move the GanttChart folder into the directory: mantis/plugins/</li>
+        </ul>
+      
+      <h2>3. How the plugin works</h2>
+        The Gantt Chart plugin for Mantis gives the ability to display the roadmap of the tickets correction on a gantt chart, for a given version, or for given filter<br />
+        <br /><img src="example_001.png" /><br />
+        <br />The Ganttt charts can be accessed via a dedicated menu, listing all the available projects+versions<br />
+        <br /><img src="GanttChart_Menu_001.png" /><br />
+        <br />Or via a link in the filter menu, allowing more options<br />
+        <br /><img src="GanttChart_ViewIssue_Link_001.png" /><br />
+        <br />To work, the plugin needs <br />
+        <ul>
+          <li>The definition of 2 custom fields<br /><img src="bug_page.png" /></li>
+          <li>Or Use the bounded "Due Date" to calculate the duration<br /><img src="config_page.png" /></li>
+          <li>Settings for the Duration custom field: It must be a custom field of type "String" in order to be able to use the regular expession<br /><img src="Mantis_Plugin_Gantt_Duration_Custom_Field_001.png" /></li>
+          <li>Settings for the Start custom field: It must be a custom field of type "Date"<br /><img src="Mantis_Plugin_Gantt_StartDate_Custom_Field_001.png" /></li>
+          <!--li>Is Anti-Aliases required ?</li-->
+        </ul>
+  </body>
+</html>

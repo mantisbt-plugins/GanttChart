@@ -38,7 +38,7 @@
 
 	$t_project_ids = user_get_all_accessible_projects( $t_user_id, $f_project_id);
 	
-	html_page_top( plugin_lang_get( 'menu', 'MantisGanttChart' ) );
+	html_page_top( plugin_lang_get( 'menu', 'GanttChart' ) );
 ?>
 
 <br />

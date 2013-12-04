@@ -24,8 +24,46 @@ html_page_top( plugin_lang_get( 'title' ) );
 
 print_manage_menu( );
 ?>
+<?php
+// Get the path to php.ini using the php_ini_loaded_file() 
+// @TODO: function available as of PHP 5.2.4
+$t_ini_path = php_ini_loaded_file();
 
+// Parse php.ini
+$t_ini = parse_ini_file( $t_ini_path );
+
+// Print and compare the values, note that using get_cfg_var()
+//if (array_key_exists( 'memory_limit', $t_ini ) ){
+//    echo '(parsed) memory_limit = yes' . "<br />";
+//    echo '(loaded) memory_limit = ' . get_cfg_var( 'memory_limit' ) . "<br />";
+//}
+?>
 <br />
+
+<table align="center" class="width75" cellspacing="1">
+    <tr>
+      <td class="form-title" colspan="2"><?php echo plugin_lang_get( 'title', 'MantisGraph' ) . ': ' . plugin_lang_get( 'config' )?></td>
+    </tr>
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category"><?php echo plugin_lang_get( 'library', 'MantisGraph' ); ?></td>
+      <td class="left"><?php echo ( plugin_config_get( 'eczlibrary' ) ) ? plugin_lang_get( 'bundled', 'MantisGraph' ) : "JpGraph";?></td>
+    </tr>
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category"><?php echo plugin_lang_get( 'jpgraph_path', 'MantisGraph' ); ?>
+		<br /><span class="small"><?php echo plugin_lang_get( 'jpgraph_path_default' )?></span>
+      </td>
+      <td class="left"><?php echo plugin_config_get( 'jpgraph_path' );?></td>
+    </tr>
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category"><?php echo plugin_lang_get( 'font', 'MantisGraph' ); ?></td>
+      <td class="left"><?php
+      $t_graph_font_option = 'plugin_' . 'MantisGraph' . '_' . 'font';
+      echo config_get( $t_graph_font_option );
+   ;?></td>
+    </tr>
+</table>
+<br />
+
 <form action="<?php echo plugin_page( 'config_edit' )?>" method="post">
 <?php echo form_security_field( 'plugin_gantt_chart_config_edit' ) ?>
   <table align="center" class="width75" cellspacing="1">
@@ -55,8 +93,6 @@ print_manage_menu( );
         <label><input type="radio" name="use_due_date_field" value="0" <?php echo( OFF == plugin_config_get( 'use_due_date_field' ) ) ? 'checked="checked" ' : ''?>/><?php echo plugin_lang_get('custom_field')?></label>
       </td>
     </tr>
-    
-    <tr class="spacer"><td></td></tr>
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category"><?php echo plugin_lang_get( 'custom_field' )?></td>
       <td class="center" colspan="2">
@@ -83,9 +119,6 @@ if ( count( custom_field_get_ids() ) > 0 ) {
         </select>
       </td>
     </tr>
-    
-    <tr class="spacer"><td></td></tr>
-    
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category"><?php echo plugin_lang_get( 'use_start_date_field' )?></td>
       <td class="center">
@@ -95,8 +128,6 @@ if ( count( custom_field_get_ids() ) > 0 ) {
         <label><input type="radio" name="use_start_date_field" value="0" <?php echo( OFF == plugin_config_get( 'use_start_date_field' ) ) ? 'checked="checked" ' : ''?>/><?php echo plugin_lang_get('disabled')?></label>
       </td>
     </tr>
-    
-    <tr class="spacer"><td></td></tr>
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category"><?php echo plugin_lang_get( 'start_date_custom_field' )?></td>
       <td class="center" colspan="2">
@@ -127,6 +158,20 @@ if ( count( custom_field_get_ids() ) > 0 ) {
       </td>
     </tr>
     
+    <tr class="spacer"><td></td></tr>
+    <tr <?php echo helper_alternate_class( )?>>
+        <td class="category"><?php echo "Maximum rows to display"; ?></td>
+      <td class="left" colspan="2"><input type="text" name="rows_max" value="<?php echo plugin_config_get( 'rows_max' );?>" /><?php echo  " (Default: " . 85 . ")";?></td>
+    </tr>
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category"><?php echo 'Maximum weeks to display'; ?></td>
+      <td class="left" colspan="2"><input type="text" name="weeks_max" value="<?php echo plugin_config_get( 'weeks_max' );?>" /><?php echo  " (Default: " . 42 . ")";?></td>
+    </tr>
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category"><?php echo 'Maximum length of the labels'; ?></td>
+      <td class="left" colspan="2"><input type="text" name="label_max" value="<?php echo plugin_config_get( 'label_max' );?>" /><?php echo  " (Default: " . 120 . ")";?></td>
+    </tr>
+        
     <tr>
       <td class="center" colspan="3">
         <input type="submit" class="button" value="<?php echo lang_get( 'change_configuration' )?>" />
@@ -135,6 +180,21 @@ if ( count( custom_field_get_ids() ) > 0 ) {
   
   </table>
 </form>
+
+<br />
+<table align="center" class="width75" cellspacing="1">
+    <tr>
+      <td class="form-title" colspan="2"><?php echo 'PHP' . ': ' . plugin_lang_get( 'config' )?></td>
+    </tr>
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category"><?php echo 'Loaded php.ini file' ?></td>
+      <td class="left"><?php echo $t_ini_path;?></td>
+    </tr>
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category"><?php echo 'memory_limit (minimum required 128M)' ?></td>
+      <td class="left"><?php if ( array_key_exists( 'memory_limit', $t_ini ) ) echo get_cfg_var( 'memory_limit' );?></td>
+    </tr>
+</table>
 
 <?php
 html_page_bottom();

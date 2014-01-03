@@ -13,6 +13,11 @@ TODO: update the documentation.
 TODO: Comment the source code
 
 +------------------------------------------------------------------------------+
+Version 1.2:
+
+Add the possibility to specify the unit of the duration, in order to increase compatibility with other plugins:
+Days, Hours
++------------------------------------------------------------------------------+
 Version 1.1:
 
 Add boundaries to the graph to limit to configured range of rows, and weeks

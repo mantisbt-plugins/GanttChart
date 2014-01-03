@@ -41,6 +41,12 @@ $s_plugin_GanttChart_field_to_use = 'Champ à utiliser pour la date de fin';
 $s_plugin_GanttChart_custom_field = 'Champ personalisé';
 $s_plugin_GanttChart_use_start_date_field = 'Utiliser un champ personnalisé pour la Date De Début Estimée';
 $s_plugin_GanttChart_start_date_custom_field = 'Champ personnalisé pour la Date De Début';
+$s_plugin_GanttChart_working_hours_in_a_day = 'Heures ouvrées dans 1 jour';
+$s_plugin_GanttChart_format_values_for_duration = 'La durée doit être définie en jour ou heure<br /> et formatée par ex. "1d" pour 1 jour, "4h" pour 4 heures, etc.';
+$s_plugin_GanttChart_format_custom_field_for_duration = 'Il est recommandé d\'utiliser un champ personalisé de type <i>String</i>, avec l\'expression régulière suivante:<br /> ^[1-9]\d*[dh]?$';
+$s_plugin_GanttChart_default_duration_unit = 'Unité par défaut pour la durée quand elle est non définie';
+$s_plugin_GanttChart_days = 'd (Days, Jours)';
+$s_plugin_GanttChart_hours = 'h (Heures)';
 
 $s_plugin_GanttChart_enabled = 'Activé';
 $s_plugin_GanttChart_disabled = 'Désactivé';

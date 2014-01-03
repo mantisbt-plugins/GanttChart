@@ -41,6 +41,12 @@ $s_plugin_GanttChart_field_to_use = 'Field to use for the end date';
 $s_plugin_GanttChart_custom_field = 'Custom field';
 $s_plugin_GanttChart_use_start_date_field = 'Use a custom field as estimated start date';
 $s_plugin_GanttChart_start_date_custom_field = 'Custom field for Start Date';
+$s_plugin_GanttChart_working_hours_in_a_day = 'Working hours in 1 day';
+$s_plugin_GanttChart_format_values_for_duration = 'The duration must be specified in days or hours<br /> and formatted as, e.g. "1d" for 1 day, "4h" for 4 hours, etc.';
+$s_plugin_GanttChart_format_custom_field_for_duration = 'It is recommanded for the custom field to use one of type <i>String</i>, with the following regular expression:<br /> ^[1-9]\d*[dh]?$';
+$s_plugin_GanttChart_default_duration_unit = 'Default unit for duration when it is not specified';
+$s_plugin_GanttChart_days = 'd (Days)';
+$s_plugin_GanttChart_hours = 'h (Hours)';
 
 $s_plugin_GanttChart_enabled = 'On';
 $s_plugin_GanttChart_disabled = 'Off';

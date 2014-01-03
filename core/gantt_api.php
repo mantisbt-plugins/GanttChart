@@ -733,7 +733,6 @@ function gantt_create_summary( $p_project_id, $p_version_id, $p_inherited, $p_st
     $t_metrics = array();
     $t_dates_arr = array();
     $t_i = 0;
-
     $t_version_name = version_full_name( $p_version_id, /* showProject */ $p_inherited, $p_project_id );
     $t_bug_datas = gantt_get_issues_and_related_in_version( $p_project_id, $t_version_name );
     $t_issue_ids = array();
@@ -818,56 +817,31 @@ function gantt_create_summary( $p_project_id, $p_version_id, $p_inherited, $p_st
 
     $t_count_ids = count( $t_issue_set_ids );
     for ( $j = 0; $j < $t_count_ids; $j++ ) {
-    $t_issue_set_id = $t_issue_set_ids[$j];
-    $t_issue_set_level = $t_issue_set_levels[$j];
-    
-//     helper_call_custom_function( 'roadmap_print_issue', array( $t_issue_set_id, $t_issue_set_level ) );
-    $t_bug_id = $t_bug_datas[$t_issue_set_id]['id'];
-    $t_title_id = $t_bug_datas[$t_issue_set_id]['summary'];
-    $t_creation_date = $t_bug_datas[$t_issue_set_id]['date_submitted'];
-    $t_handler_id = $t_bug_datas[$t_issue_set_id]['handler_id'];
-    $t_extra = "";
-    $t_start_date = gantt_get_start_date( $t_bug_id, $t_creation_date );
-    $t_due_date = gantt_get_resolution_date( $t_bug_id );
-    $t_actype = ACTYPE_NORMAL;
-    $t_duration_in_seconds = null;
-    
-    if ( null == $t_due_date ) {
-      //The issue is still opened:
-      if ( OFF == plugin_config_get( 'use_due_date_field' ) ) {
-        // i.e. Custom field is used:
-        //TRY TO GET THE DURATION
-        $t_field_id = plugin_config_get( 'custom_field_id_for_duration' ); // Duration
-        $t_duration = custom_field_get_value( $t_field_id, $t_bug_id );
-        if (!is_blank($t_duration)) {
-          //convert days into seconds:
-          $t_duration_in_seconds = $t_duration * 24 * 3600;
+        $t_issue_set_id = $t_issue_set_ids[$j];
+        $t_issue_set_level = $t_issue_set_levels[$j];
+
+    //     helper_call_custom_function( 'roadmap_print_issue', array( $t_issue_set_id, $t_issue_set_level ) );
+        $t_bug_id = $t_bug_datas[$t_issue_set_id]['id'];
+        $t_title_id = $t_bug_datas[$t_issue_set_id]['summary'];
+        $t_handler_id = $t_bug_datas[$t_issue_set_id]['handler_id'];
+        $t_extra = "";
+        $t_actype = ACTYPE_NORMAL;
+        $t_start_date = gantt_get_start_date( $t_bug_id );
+        $t_due_date = gantt_get_due_date( $t_bug_id, $t_start_date );
+
+        if ( null == gantt_get_resolution_date( $t_bug_id )
+             && null != gantt_get_assigned_date( $t_bug_id ) ) {
+            $t_extra = " (" . user_get_name( $t_handler_id ) . ")";
         }
-        //END OF GETTING DAYS FOR CORRECTION
-      }
-      
-      //GET THE END DATE:
-      if ( null != gantt_get_assigned_date( $t_bug_id ) ) {
-        $t_due_date = gantt_get_end_date( $t_bug_id, $t_start_date, $t_duration_in_seconds );
-        $t_extra = " (" . user_get_name( $t_handler_id ) . ")";
-      } else {
-        $t_due_date = gantt_get_end_date( $t_bug_id, $t_creation_date, $t_duration_in_seconds );
-      }
-      
-      if ( null == $t_due_date ) {
-        $t_actype = ACTYPE_MILESTONE;
-      }
-    }
+
+        if ( null == $t_due_date ) {
+            $t_actype = ACTYPE_MILESTONE;
+        }
     
-   
-    
-//        echo 'DEBUG:0- Issue('.$t_issue_set_id.')<br/>'."\n";
         $t_constraint_parent[$t_issue_set_id] = $j;
     
         if ( isset ( $t_bug_datas[$t_issue_set_id]['parents'] ) ){
-//            echo 'DEBUG:2- For issue('.$t_issue_set_id.'), parent(<pre>';print_r($t_bug_datas[$t_issue_set_id]['parents']);echo ')</pre><br/>'."\n";
             for ( $o = 0; $o < count( $t_bug_datas[$t_issue_set_id]['parents'] ); $o++){
-//                     echo 'DEBUG:3- parent on rwo('.$t_bug_datas[$t_issue_set_id]['parents'][$o].'), o('.$o.')<br/>'."\n";
                 $t_constraint[$t_issue_set_id][] = array(
                     'parent' => $t_bug_datas[$t_issue_set_id]['parents'][$o],
                     'type'   => CONSTRAIN_ENDEND
@@ -919,91 +893,72 @@ function gantt_create_summary( $p_project_id, $p_version_id, $p_inherited, $p_st
 # --------------------
 # Gives the durations of all the issues assigned to a user:
 function gantt_create_summary_by_user( $p_user_id, $p_project_id, $p_version_id, $p_inherited ){
-
-  $t_bug_table = db_get_table( 'mantis_bug_table' );
-
-  $t_project_id = db_prepare_int( $p_project_id );
-  $t_user_id = db_prepare_int( $p_user_id );
-  $t_version_name = version_full_name( $p_version_id, /* showProject */ $p_inherited, $t_project_id );
-  $t_version_name = db_prepare_string( $t_version_name );
+    $t_bug_table = db_get_table( 'mantis_bug_table' );
   
-  $query = "SELECT id, summary, date_submitted, handler_id, due_date
-             FROM $t_bug_table
-             WHERE handler_id='$t_user_id'";
-  $t_and = '';
-             
-  if ( null != $p_project_id && ALL_PROJECTS != $p_project_id ) {
-    $t_and .= " AND target_version='$t_version_name'";
-  }
-  
-  $query .= $t_and;
-                  
-  $result = db_query( $query );
-  while( $row = db_fetch_array( $result ) ) {
-    $t_results[] = $row;
-  }
-  
-  
-  $t_metrics = array();
-  $t_dates_arr = array();
-  $t_i = 0;
-  
-  foreach ($t_results as $t_bug_data) {
-    $t_bug_id = $t_bug_data['id'];
-    $t_title_id = $t_bug_data['summary'];
-    $t_creation_date = $t_bug_data['date_submitted'];
-    $t_handler_id = $t_bug_data['handler_id'];
-    $t_extra = "";
-    $t_start_date = gantt_get_start_date( $t_bug_id, $t_creation_date );
-    $t_due_date = gantt_get_resolution_date( $t_bug_id );
-    $t_actype = ACTYPE_NORMAL;
-    $t_duration_in_seconds = null;
+    $t_project_id = db_prepare_int( $p_project_id );
+    $t_user_id = db_prepare_int( $p_user_id );
+    $t_version_name = version_full_name( $p_version_id, /* showProject */ $p_inherited, $t_project_id );
+    $t_version_name = db_prepare_string( $t_version_name );
     
-    if ( null == $t_due_date ) {
-      //The issue is still opened:
-      if ( OFF == plugin_config_get( 'use_due_date_field' ) ) {
-        // i.e. Custom field is used:
-        //TRY TO GET THE DURATION
-        $t_field_id = plugin_config_get( 'custom_field_id_for_duration' ); // Duration
-        $t_duration = custom_field_get_value( $t_field_id, $t_bug_id );
-        if (!is_blank($t_duration)) {
-          //convert days into seconds:
-          $t_duration_in_seconds = $t_duration * 24 * 3600;
-        }
-        //END OF GETTING DAYS FOR CORRECTION
-      }
+    $query = "SELECT id, summary, date_submitted, handler_id, due_date
+               FROM $t_bug_table
+               WHERE handler_id='$t_user_id'";
+    $t_and = '';
+               
+    if ( null != $p_project_id && ALL_PROJECTS != $p_project_id ) {
+        $t_and .= " AND target_version='$t_version_name'";
+    }
+    
+    $query .= $t_and;
+                    
+    $result = db_query( $query );
+    while( $row = db_fetch_array( $result ) ) {
+        $t_results[] = $row;
+    }
+    
+    
+    $t_metrics = array();
+    $t_dates_arr = array();
+    $t_i = 0;
+    
+    foreach ($t_results as $t_bug_data) {
+      $t_bug_id = $t_bug_data['id'];
+      $t_title_id = $t_bug_data['summary'];
+      $t_creation_date = $t_bug_data['date_submitted'];
+      $t_handler_id = $t_bug_data['handler_id'];
+      $t_extra = "";
+      $t_actype = ACTYPE_NORMAL;
+      $t_start_date = gantt_get_start_date( $t_bug_id );
+      $t_due_date = gantt_get_due_date( $t_bug_id, $t_start_date );
       
-      //GET THE END DATE:
-      if ( null != gantt_get_assigned_date( $t_bug_id ) ) {
-        $t_due_date = gantt_get_end_date( $t_bug_id, $t_start_date, $t_duration_in_seconds );
-        $t_extra = " (" . user_get_name( $t_handler_id ) . ")";
-      } else {
-        $t_due_date = gantt_get_end_date( $t_bug_id, $t_creation_date, $t_duration_in_seconds );
+      if ( null == gantt_get_resolution_date( $t_bug_id )
+           && null != gantt_get_assigned_date( $t_bug_id ) ) {
+          $t_extra = " (" . user_get_name( $t_handler_id ) . ")";
       }
-      
+  
       if ( null == $t_due_date ) {
-        $t_actype = ACTYPE_MILESTONE;
+          $t_actype = ACTYPE_MILESTONE;
       }
+      
+  
+      switch ( $t_actype ) {
+          case ACTYPE_NORMAL:
+              $t_dates_arr[] = $t_start_date;
+              $t_dates_arr[] = $t_due_date;
+              $t_metrics[] = array( $t_i, $t_actype, $t_bug_id, $t_start_date, $t_due_date, $t_extra );
+              break;
+          case ACTYPE_MILESTONE:
+              $t_dates_arr[] = $t_start_date;
+              $t_metrics[] = array( $t_i, $t_actype, $t_bug_id, $t_start_date, null, $t_extra );
+              break;
+      }
+      $t_i++;
     }
-
-    switch ( $t_actype ) {
-      case ACTYPE_NORMAL:
-        $t_dates_arr[] = $t_start_date;
-        $t_dates_arr[] = $t_due_date;
-        $t_metrics[] = array( $t_i, $t_actype, $t_bug_id, $t_start_date, $t_due_date, $t_extra );
-        break;
-      case ACTYPE_MILESTONE:
-        $t_dates_arr[] = $t_start_date;
-        $t_metrics[] = array( $t_i, $t_actype, $t_bug_id, $t_start_date, null, $t_extra );
-        break;
-    }
-    $t_i++;
-  }
-  $t_dates_range = gantt_graph_best_dates_range( $t_dates_arr );
-  return array(
-      'metrics' => $t_metrics,
-      'range' => $t_dates_range
-  );
+    $t_dates_range = gantt_graph_best_dates_range( $t_dates_arr );
+    return array(
+        'metrics' => $t_metrics,
+        'range' => $t_dates_range
+    );
 }
 
 
@@ -1023,46 +978,26 @@ function gantt_create_summary_from_bug_list( $p_bugslist ){
         $t_issue_constraint = array(); // No constraint
         foreach ( $t_bugslist as $t_bug_id ) {
             $t_title_id = bug_get_field( $t_bug_id, 'summary' );
-            $t_creation_date = bug_get_field( $t_bug_id, 'date_submitted' );
             $t_handler_id = bug_get_field( $t_bug_id, 'handler_id' );
             $t_extra = "";
-            $t_start_date = gantt_get_start_date( $t_bug_id, $t_creation_date );
-            $t_due_date = gantt_get_resolution_date( $t_bug_id );
             $t_actype = ACTYPE_NORMAL;
-            $t_duration_in_seconds = null;
+            $t_start_date = gantt_get_start_date( $t_bug_id );
+            $t_due_date = gantt_get_due_date( $t_bug_id, $t_start_date );
 
-            if ( null == $t_due_date ) {
-                //The issue is still opened:
-                if ( OFF == plugin_config_get( 'use_due_date_field' ) ) {
-                    // i.e. Custom field is used:
-                    //TRY TO GET THE DURATION
-                    $t_field_id = plugin_config_get( 'custom_field_id_for_duration' ); // Duration
-                    $t_duration = custom_field_get_value( $t_field_id, $t_bug_id );
-                    if (!is_blank($t_duration)) {
-                        //convert days into seconds:
-                        $t_duration_in_seconds = $t_duration * 24 * 3600;
-                    }
-                    //END OF GETTING DAYS FOR CORRECTION
-                }
-
-                //GET THE END DATE:
-                if ( null != gantt_get_assigned_date( $t_bug_id ) ) {
-                    $t_due_date = gantt_get_end_date( $t_bug_id, $t_start_date, $t_duration_in_seconds );
-                    $t_extra = " (" . user_get_name( $t_handler_id ) . ")";
-                } else {
-                    $t_due_date = gantt_get_end_date( $t_bug_id, $t_creation_date, $t_duration_in_seconds );
-                }
-
-                if ( null == $t_due_date ) {
-                    $t_actype = ACTYPE_MILESTONE;
-                }
+            if ( null == gantt_get_resolution_date( $t_bug_id )
+                 && null != gantt_get_assigned_date( $t_bug_id ) ) {
+                $t_extra = " (" . user_get_name( $t_handler_id ) . ")";
             }
-
+    
+            if ( null == $t_due_date ) {
+                $t_actype = ACTYPE_MILESTONE;
+            }
+            
             switch ( $t_actype ) {
                 case ACTYPE_NORMAL:
                     $t_dates_arr[] = $t_start_date;
                     $t_dates_arr[] = $t_due_date;
-                    $t_metrics[] = array( $t_i, $t_actype, $t_bug_id, $t_start_date, $t_due_date, $t_extra,$t_issue_set_level, $t_issue_constraint );
+                    $t_metrics[] = array( $t_i, $t_actype, $t_bug_id, $t_start_date, $t_due_date, $t_extra, $t_issue_set_level, $t_issue_constraint );
                     break;
                 case ACTYPE_MILESTONE:
                     $t_dates_arr[] = $t_start_date;
@@ -1116,10 +1051,74 @@ function gantt_get_assigned_date( $p_bug_id ){
  return null;
 }
 
+
+# --------------------
+# Gives the due date of an issue according to the plugin settings:
+function gantt_get_due_date( $p_bug_id, $p_start_date ){
+    $t_due_date = gantt_get_resolution_date( $p_bug_id );
+    if ( null == $t_due_date ) {
+      //The issue is still opened:
+      $t_duration_in_seconds = gantt_get_duration_in_seconds($p_bug_id);
+      
+      //GET THE END DATE:
+      if ( null != gantt_get_assigned_date( $p_bug_id ) ) {
+        $t_due_date = gantt_get_end_date( $p_bug_id, $p_start_date, $t_duration_in_seconds );
+      } else {
+        $t_creation_date = bug_get_field( $p_bug_id, 'date_submitted' );
+        $t_due_date = gantt_get_end_date( $p_bug_id, $t_creation_date, $t_duration_in_seconds );
+      }
+      
+    }
+    
+    return $t_due_date;
+}
+
+# --------------------
+# Gives the duration in seconds according to the plugin settings:
+function gantt_get_duration_in_seconds( $p_bug_id ){
+    $t_duration_in_seconds = null;
+    if ( OFF == plugin_config_get( 'use_due_date_field' ) ) {
+        // i.e. Custom field is used:
+        //TRY TO GET THE DURATION
+        $t_field_id = plugin_config_get( 'custom_field_id_for_duration' ); // Duration
+        $t_duration = custom_field_get_value( $t_field_id, $p_bug_id );
+
+        if( !is_blank( $t_duration ) ){
+            preg_match( '/(?P<duration>\d+)(?P<unit>[dh]?)/', $t_duration, $t_matches );
+            // get the unit
+            if( !isset( $t_matches['unit'] ) ){
+                $t_unit = plugin_config_get( 'default_duration_unit' );
+            } else {
+                $t_unit = $t_matches['unit'];
+            }
+            // get the value
+            $t_value = $t_matches['duration'];
+            // convert it in seconds:
+            switch ( $t_unit ) {
+                case 'h':
+                    // transform the current duration in terms of working days for the gantt chart,
+                    // as the smallest unit for gantt chart is day
+                    $t_working_hours_in_a_day = plugin_config_get( 'working_hours_in_a_day' );
+                    $t_gantt_chart_days = ceil( $t_value / $t_working_hours_in_a_day );
+                    $t_duration_in_seconds = $t_gantt_chart_days * 24 * 3600;
+                    break;
+                case 'd':
+                default:
+                    $t_duration_in_seconds = $t_value * 24 * 3600;
+                    break;
+            }
+        }
+    }
+
+    //END OF GETTING DAYS FOR CORRECTION
+    return $t_duration_in_seconds;
+}
+
 # --------------------
 # Gives the end_date of an issue according to the plugin settings:
-function gantt_get_start_date( $p_bug_id, $p_creation_date ){
+function gantt_get_start_date( $p_bug_id ){
   $t_assignment_date = gantt_get_assigned_date( $p_bug_id );
+  $t_creation_date = bug_get_field( $p_bug_id, 'date_submitted' );
   
   if ( plugin_config_get ( 'use_start_date_field' ) && ( plugin_config_get ( 'custom_field_id_for_start_date' ) > 0 ) ){
     $t_custom_start_date = custom_field_get_value( plugin_config_get ( 'custom_field_id_for_start_date' ), $p_bug_id );
@@ -1130,7 +1129,7 @@ function gantt_get_start_date( $p_bug_id, $p_creation_date ){
     } else {
       //Start date has not been filled yet. Use the assignement date instead.
       if ( null == $t_assignment_date ) {
-        $t_start_date = $p_creation_date;
+        $t_start_date = $t_creation_date;
       } else {
         $t_start_date = $t_assignment_date;
       }
@@ -1138,7 +1137,7 @@ function gantt_get_start_date( $p_bug_id, $p_creation_date ){
   } else {
     //use only the assignment date
     if ( null == $t_assignment_date ) {
-      $t_start_date = $p_creation_date;
+      $t_start_date = $t_creation_date;
     } else {
       $t_start_date = $t_assignment_date;
     }

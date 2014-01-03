@@ -28,7 +28,7 @@ class GanttChartPlugin extends MantisGraphPlugin  {
 		$this->description = lang_get( 'plugin_ganttchart_description' );
 		$this->page = 'config';
 
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->requires = array(
 			'MantisCore' => '1.2.0',
 			'MantisGraph' => '1.0',
@@ -54,6 +54,8 @@ class GanttChartPlugin extends MantisGraphPlugin  {
 			'rows_max' => 85,
 			'weeks_max' => 42, // 80
 			'label_max' => 120,
+			'default_duration_unit' => 'd',
+			'working_hours_in_a_day' => 8,
 		);
 	}
 	

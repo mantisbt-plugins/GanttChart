@@ -85,41 +85,6 @@ $t_ini = parse_ini_file( $t_ini_path );
     <tr class="spacer"><td></td></tr>
     
     <tr <?php echo helper_alternate_class( )?>>
-      <td class="category"><?php echo plugin_lang_get( 'field_to_use' )?></td>
-      <td class="center">
-        <label><input type="radio" name="use_due_date_field" value="1" <?php echo( ON == plugin_config_get( 'use_due_date_field' ) ) ? 'checked="checked" ' : ''?>/><?php echo lang_get('due_date')?></label>
-      </td>
-      <td class="center">
-        <label><input type="radio" name="use_due_date_field" value="0" <?php echo( OFF == plugin_config_get( 'use_due_date_field' ) ) ? 'checked="checked" ' : ''?>/><?php echo plugin_lang_get('custom_field')?></label>
-      </td>
-    </tr>
-    <tr <?php echo helper_alternate_class( )?>>
-      <td class="category"><?php echo plugin_lang_get( 'custom_field' )?></td>
-      <td class="center" colspan="2">
-        <select name="custom_field_id_for_duration">
-          <option value="-1"></option>
-<?php
-# You need either global permissions or project-specific permissions to link
-#  custom fields
-if ( count( custom_field_get_ids() ) > 0 ) {
-  $t_custom_fields = custom_field_get_ids();
-
-  foreach( $t_custom_fields as $t_field_id )
-  {
-    $t_desc = custom_field_get_definition( $t_field_id );
-    if ( plugin_config_get( 'custom_field_id_for_duration' ) == $t_field_id ) {
-      $t_selected = 'selected';
-    } else {
-      $t_selected = '';
-    }
-    echo "          <option value=\"$t_field_id\" $t_selected>" . string_attribute( $t_desc['name'] ) . '</option>' ;
-  }
-}
-?>
-        </select>
-      </td>
-    </tr>
-    <tr <?php echo helper_alternate_class( )?>>
       <td class="category"><?php echo plugin_lang_get( 'use_start_date_field' )?></td>
       <td class="center">
         <label><input type="radio" name="use_start_date_field" value="1" <?php echo( ON == plugin_config_get( 'use_start_date_field' ) ) ? 'checked="checked" ' : ''?>/><?php echo plugin_lang_get('enabled')?></label>
@@ -130,7 +95,7 @@ if ( count( custom_field_get_ids() ) > 0 ) {
     </tr>
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category"><?php echo plugin_lang_get( 'start_date_custom_field' )?></td>
-      <td class="center" colspan="2">
+      <td class="center">
         <select name="custom_field_id_for_start_date">
           <option value="-1"></option>
 <?php
@@ -156,6 +121,64 @@ if ( count( custom_field_get_ids() ) > 0 ) {
 ?>
         </select>
       </td>
+      <td></td>
+    </tr>
+    
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category"><?php echo plugin_lang_get( 'field_to_use' )?></td>
+      <td class="center">
+        <label><input type="radio" name="use_due_date_field" value="0" <?php echo( OFF == plugin_config_get( 'use_due_date_field' ) ) ? 'checked="checked" ' : ''?>/><?php echo plugin_lang_get('custom_field')?></label>
+      </td>
+      <td class="center">
+        <label><input type="radio" name="use_due_date_field" value="1" <?php echo( ON == plugin_config_get( 'use_due_date_field' ) ) ? 'checked="checked" ' : ''?>/><?php echo lang_get('due_date')?></label>
+      </td>
+    </tr>
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category"><?php echo plugin_lang_get( 'custom_field_id_for_duration' )?><br />
+          <span class="small"><?php echo plugin_lang_get( 'format_values_for_duration' )?></span><br /><br />
+          <span class="small"><?php echo plugin_lang_get( 'format_custom_field_for_duration' )?></span>
+      </td>
+      <td class="center">
+        <select name="custom_field_id_for_duration">
+          <option value="-1"></option>
+<?php
+# You need either global permissions or project-specific permissions to link
+#  custom fields
+/*
+ * Custom field must be of type: 'String'
+ * Regular expression must be: ^([1-9]\d*)(?(1)[dh])$ 
+ */
+if ( count( custom_field_get_ids() ) > 0 ) {
+  $t_custom_fields = custom_field_get_ids();
+
+  foreach( $t_custom_fields as $t_field_id )
+  {
+    $t_desc = custom_field_get_definition( $t_field_id );
+    if ( plugin_config_get( 'custom_field_id_for_duration' ) == $t_field_id ) {
+      $t_selected = 'selected';
+    } else {
+      $t_selected = '';
+    }
+    echo "          <option value=\"$t_field_id\" $t_selected>" . string_attribute( $t_desc['name'] ) . '</option>' ;
+  }
+}
+?>
+        </select>
+      </td>
+      <td></td>
+    </tr>
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category"><?php echo plugin_lang_get( 'default_duration_unit' )?><br /></td>
+      <td class="center">
+        <label><input type="radio" name="default_duration_unit" value="d" <?php echo( 'd' === plugin_config_get( 'default_duration_unit' ) ) ? 'checked="checked" ' : ''?>/><?php echo plugin_lang_get('days')?></label>
+      </td>
+      <td class="center">
+        <label><input type="radio" name="default_duration_unit" value="h" <?php echo( 'h' === plugin_config_get( 'default_duration_unit' ) ) ? 'checked="checked" ' : ''?>/><?php echo plugin_lang_get('hours')?></label>
+      </td>
+    </tr>
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category"><?php echo plugin_lang_get( 'working_hours_in_a_day' )?><span class="small"><?php echo  " [1-24]";?></span></td>
+      <td class="left" colspan="2"><input type="text" name="working_hours_in_a_day" value="<?php echo plugin_config_get( 'working_hours_in_a_day' );?>" /></td>
     </tr>
     
     <tr class="spacer"><td></td></tr>

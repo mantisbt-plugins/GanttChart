@@ -697,7 +697,7 @@ function gantt_get_issues_and_related_in_version( $p_project_id, $p_version_name
               LEFT JOIN $t_relation_table ON sbt.id=$t_relation_table.destination_bug_id AND $t_relation_table.relationship_type=2
               LEFT JOIN $t_bug_table AS dbt ON dbt.id=$t_relation_table.source_bug_id
               WHERE sbt.project_id=" . db_param() . " AND sbt.target_version=" . db_param() . " ORDER BY sbt.status ASC, sbt.last_updated DESC";
-    $t_result = db_query_bound( $query, Array( $t_project_id, $t_version_name ) );
+    $t_result = db_query_bound( $query, array( $t_project_id, $t_version_name ) );
 
     // Filter ids according to level access
     while ( $t_row = db_fetch_array( $t_result ) ) {
@@ -902,16 +902,15 @@ function gantt_create_summary_by_user( $p_user_id, $p_project_id, $p_version_id,
     
     $query = "SELECT id, summary, date_submitted, handler_id, due_date
                FROM $t_bug_table
-               WHERE handler_id='$t_user_id'";
-    $t_and = '';
+               WHERE handler_id='" . db_param() . "'";
                
     if ( null != $p_project_id && ALL_PROJECTS != $p_project_id ) {
-        $t_and .= " AND target_version='$t_version_name'";
+        $query .= " AND target_version='" . db_param() . "'";
+        $result = db_query_bound( $query, array( $t_user_id, $t_version_name ) );
+    } else {
+        $result = db_query_bound( $query, array( $t_user_id ) );
     }
     
-    $query .= $t_and;
-                    
-    $result = db_query( $query );
     while( $row = db_fetch_array( $result ) ) {
         $t_results[] = $row;
     }

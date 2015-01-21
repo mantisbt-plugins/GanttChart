@@ -24,10 +24,10 @@
   * MantisBT Core API's
   */
 require_once( 'core.php' );
-require_once( 'gantt_api.php' );
+plugin_require_api( 'core/gantt_api.php' );
 
-require_once( 'version_api.php' );
-require_once( 'history_api.php' );
+require_api( 'version_api.php' );
+require_api( 'history_api.php' );
 
 $f_project_id = gpc_get_int( 'project_id', helper_get_current_project() );
 # Override the current page to make sure we get the appropriate project-specific configuration
@@ -42,17 +42,6 @@ $t_project_ids = user_get_all_accessible_projects( $t_user_id, $f_project_id);
 html_page_top( plugin_lang_get( 'menu', 'GanttChart' ) );
 ?>
 
-<br />
-        <table class="width100" cellspacing="1">
-            <tr valign="top">
-                <td class="form-title" colspan="1">
-                    <?php echo lang_get( 'email_project' ); ?>
-                </td>
-                <td class="form-title" colspan="3">
-                    <?php echo lang_get( 'versions' ) ?>
-                </td>
-                    <?php //echo $t_orcttab; ?>
-            </tr>
 <?php
 //PARAMS
 $p_projects = null;
@@ -70,21 +59,27 @@ if( null == $p_projects ) {
     }
 }
 
+?>
+
+<div id="gantt-chart-container" class="container">
+    <h2><?php echo plugin_lang_get( 'menu', 'GanttChart' ); ?></h2>
+    <div id="gantt-chart-list" class="summary-container">
+        <!-- PROJECTS -->
+<?php
 foreach ($p_projects as $t_project) {
-?>
-            <!-- PROJECTS -->
-<?php
     $t_project_name = str_repeat( "&raquo; ", $p_level ) . project_get_name( $t_project );
-?>
-            <tr valign="top">
-                <td class="category"><?php echo $t_project_name; ?></td>
-                <td>
-                    <table>
-                    <!-- PROJECT VERSIONS -->
-
-<?php
     $t_versions = version_get_all_rows( $t_project, /* released = */ null, /* obsolete = */ null );
-
+?>
+        <table>
+            <thead>
+                <tr class="row-category2">
+                    <th width="40%"><?php echo $t_project_name; ?></th>
+                    <td class="right" width="30%"><?php echo lang_get( 'scheduled_release' ); ?></td>
+                    <td class="right" width="30%"><?php echo lang_get( 'versions' ); ?></td>
+                </tr>
+            </thead>
+            <tbody>
+<?php
     if ( count( $t_versions ) > 0 ) {
         foreach ( $t_versions as $t_version ) {
 
@@ -112,56 +107,41 @@ foreach ($p_projects as $t_project) {
                 $t_version_count_issues = gantt_count_summary( $t_project, $t_version_name );
                 $t_gantt_chart_max_rows = plugin_config_get( 'rows_max' );
                 $t_gantt_chart_number_of_slices = ceil( ( $t_version_count_issues / $t_gantt_chart_max_rows ) );
+                $t_row_date = $t_released_formatted . $t_date_formatted;
+                $t_row_version = '';
                 if ( 0 == $t_gantt_chart_number_of_slices ){
-?>
-                        <tr <?php echo helper_alternate_class() ?>>
-                            <td><?php echo $t_released_formatted . $t_date_formatted;?></td>
-                            <td><?php echo string_display( $t_version_name . " (" . plugin_lang_get( 'no_data' ) . ")" ); ?></td>
-                        </tr>
-<?php
+                    $t_row_version = string_display( $t_version_name . " (" . plugin_lang_get( 'no_data' ) . ")" );
                 } elseif ( 1 == $t_gantt_chart_number_of_slices ) {
-?>
-                        <tr <?php echo helper_alternate_class() ?>>
-                            <td><?php echo $t_released_formatted . $t_date_formatted;?></td>
-                            <td>
-                                <a href="<?php echo plugin_page( 'summary_gantt_chart.php' );?>&project_id=<?php echo $t_project; ?>&version_id=<?php echo $t_version['id']; ?>&inherited=<?php echo $t_inherited; ?>" target="_blank" alt="Gantt chart for <?php echo $t_project_name . " (" . $t_version_name . ")" ;?>"><?php echo string_display( $t_version_name ); ?></a>
-                            </td>
-                        </tr>
-<?php
+                    $t_row_version = '<a href="' . plugin_page( 'summary_gantt_chart.php' ) . '&project_id=' . $t_project . '&version_id=' . $t_version['id'] . '&inherited=' . $t_inherited . '" target="_blank" alt="Gantt chart for ' . $t_project_name . ' (' . $t_version_name . ')">' . string_display( $t_version_name ) . '</a>';
                 } else {
-?>
-                        <tr <?php echo helper_alternate_class() ?>>
-                            <td><?php echo $t_released_formatted . $t_date_formatted;?></td>
-                            <td>
-<?php
-                    $t_display_string = string_display( $t_version_name );
+                    $t_row_version = string_display( $t_version_name );
                     for ( $t_i = 0; $t_i < $t_gantt_chart_number_of_slices; $t_i++ ){
                         $t_index_start = $t_i * $t_gantt_chart_max_rows;
                         $t_index_length = min( $t_gantt_chart_max_rows, ( $t_version_count_issues - $t_index_start ) );
-                        $t_display_string .= " (<a href=\"" . plugin_page( 'summary_gantt_chart.php' ) . "&project_id=" . $t_project . "&version_id=" . $t_version['id'] . "&inherited=" . $t_inherited . "&start_index=" . $t_index_start . "&length=" . $t_index_length . "&slice=" . ($t_i + 1) . "\" target=\"_blank\" alt=\"Gantt chart for $t_project_name ($t_version_name)\">" . string_display( plugin_lang_get( 'part' ) . ($t_i + 1) ) . "</a>)";
+                        $t_row_version .= " (<a href=\"" . plugin_page( 'summary_gantt_chart.php' ) . "&project_id=" . $t_project . "&version_id=" . $t_version['id'] . "&inherited=" . $t_inherited . "&start_index=" . $t_index_start . "&length=" . $t_index_length . "&slice=" . ($t_i + 1) . "\" target=\"_blank\" alt=\"Gantt chart for $t_project_name ($t_version_name)\">" . string_display( plugin_lang_get( 'part' ) . ($t_i + 1) ) . "</a>)";
                     }
-                    echo $t_display_string;
-?>
-                            </td>
-                        </tr>
-<?php
                 }
 ?>
+                <tr>
+                    <td class="width50"></td>
+                    <td class="right"><?php echo $t_row_date; ?></td>
+                    <td class="right"><?php echo $t_row_version; ?></td>
+                </tr>
 <?php   
             }
         }
-             
+
     }
 ?>
-                        <!-- PROJECT VERSIONS: END -->
-                    </table>
-                </td>
-            </tr>
+            </tbody>
+        </table>
 <?php
 }
 ?>
-            <!-- PROJECTS: END -->
-        </table>
+        <!-- PROJECTS: END -->
+    </div><!-- /.table-container -->
+</div><!-- /.container -->
+
 <?php
 html_page_bottom();
 ?>

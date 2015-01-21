@@ -13,6 +13,9 @@ TODO: update the documentation.
 TODO: Comment the source code
 
 +------------------------------------------------------------------------------+
+Version 1.3.0:
+Support for mantisBT v1.3
++------------------------------------------------------------------------------+
 Version 1.2.1:
 
 Add link in the Roadmap and Changelog page (requires the following events to be added in these pages: 

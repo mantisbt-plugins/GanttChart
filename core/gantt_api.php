@@ -28,9 +28,9 @@ if ( plugin_config_get( 'eczlibrary' ) != config_get( 'plugin_MantisGraph_eczlib
 if ( plugin_config_get( 'jpgraph_path' ) != config_get( 'plugin_MantisGraph_jpgraph_path' ) ) {
   plugin_config_set( 'jpgraph_path',  config_get('plugin_MantisGraph_jpgraph_path') );
 }
-require_once( 'graph_api.php' );
-require_once( 'version_api.php' );
-require_once( 'history_api.php' );
+plugin_require_api( 'core/graph_api.php', 'MantisGraph' );
+require_api( 'version_api.php' );
+require_api( 'history_api.php' );
 
  
 if( OFF == plugin_config_get( 'eczlibrary' ) ) {
@@ -45,11 +45,11 @@ if( OFF == plugin_config_get( 'eczlibrary' ) ) {
     require_once( 'jpgraph_gantt.php' );
     require_once( 'jpgraph_mgraph.php' );
   } else {
-    require_once( 'jpgraph/jpgraph_gantt.php' );
-    require_once( 'jpgraph/jpgraph_mgraph.php' );
+    require_lib( 'jpgraph/jpgraph_gantt.php' );
+    require_lib( 'jpgraph/jpgraph_mgraph.php' );
   }
 } else {
-  require_once( 'ezc/Base/src/base.php' );
+  require_lib( 'ezc/Base/src/base.php' );
 }
 
 // function gantt_get_font() {
@@ -681,8 +681,8 @@ function gantt_count_summary( $p_project_id, $p_version_name ){
 }
 
 function gantt_get_issues_and_related_in_version( $p_project_id, $p_version_name ){
-    $t_bug_table = db_get_table( 'mantis_bug_table' );
-    $t_relation_table = db_get_table( 'mantis_bug_relationship_table' );
+    $t_bug_table = db_get_table( 'bug' );
+    $t_relation_table = db_get_table( 'bug_relationship' );
     $t_bug_datas = array();
     
     $t_project_id = db_prepare_int( $p_project_id );

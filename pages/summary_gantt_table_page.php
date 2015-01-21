@@ -25,8 +25,8 @@
   */
 require_once( 'core.php' );
 
-require_once( 'version_api.php' );
-require_once( 'history_api.php' );
+require_api( 'version_api.php' );
+require_api( 'history_api.php' );
 
 $f_project_id = gpc_get_int( 'project_id', helper_get_current_project() );
 # Override the current page to make sure we get the appropriate project-specific configuration

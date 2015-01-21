@@ -25,8 +25,8 @@
 	  */
 	require_once( 'core.php' );
 
-	require_once( 'gantt_api.php' );
-	require_once( 'version_api.php' );
+	plugin_require_api( 'core/gantt_api.php' );
+	require_api( 'version_api.php' );
 	
 	access_ensure_project_level( config_get( 'view_summary_threshold' ) );
 	

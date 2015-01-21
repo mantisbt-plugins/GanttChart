@@ -28,10 +28,10 @@ class GanttChartPlugin extends MantisGraphPlugin  {
 		$this->description = lang_get( 'plugin_ganttchart_description' );
 		$this->page = 'config';
 
-		$this->version = '1.2.1';
+		$this->version = '1.3.0';
 		$this->requires = array(
-			'MantisCore' => '1.2.0',
-			'MantisGraph' => '1.0',
+			'MantisCore' => '1.3.0',
+			'MantisGraph' => '1.3.0',
 		);
 
 		$this->author = 'Alain D\'EURVEILHER';

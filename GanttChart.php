@@ -28,7 +28,7 @@ class GanttChartPlugin extends MantisGraphPlugin  {
 		$this->description = lang_get( 'plugin_ganttchart_description' );
 		$this->page = 'config';
 
-		$this->version = '1.2';
+		$this->version = '1.2.1';
 		$this->requires = array(
 			'MantisCore' => '1.2.0',
 			'MantisGraph' => '1.0',
@@ -36,7 +36,7 @@ class GanttChartPlugin extends MantisGraphPlugin  {
 
 		$this->author = 'Alain D\'EURVEILHER';
 		$this->contact = 'alain.deurveilher@gmail.com';
-		$this->url = 'http://alaind.eu/';
+		$this->url = 'https://github.com/mantisbt-plugins/GanttChart';
 	}
 
 	/**
@@ -100,8 +100,10 @@ class GanttChartPlugin extends MantisGraphPlugin  {
 	}
 	
 	
-	function view_gantt_chart() {
-    return array();
+	function view_gantt_chart( $p_event, $p_project_id, $p_version_id ) {
+        $t_page = plugin_page( 'summary_gantt_chart.php' ) . "&project_id=$p_project_id&version_id=$p_version_id&inherited=";
+        $t_lang = plugin_lang_get( 'title' );
+        return array("<a href=\"$t_page\">$t_lang</a>");
   }
   
   

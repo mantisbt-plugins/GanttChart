@@ -13,7 +13,16 @@ TODO: update the documentation.
 TODO: Comment the source code
 
 +------------------------------------------------------------------------------+
-Version 1.2:
+Version 1.2.1:
+
+Add link in the Roadmap and Changelog page (requires the following events to be added in these pages: 
+EVENT_VIEW_ROADMAP_EXTRA
+EVENT_VIEW_CHANGELOG_EXTRA
+
+of type EVENT_TYPE_CHAIN
+)
++------------------------------------------------------------------------------+
+Version 1.2.0:
 
 Add the possibility to specify the unit of the duration, in order to increase compatibility with other plugins:
 Days, Hours

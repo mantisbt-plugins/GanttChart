@@ -499,7 +499,7 @@ function gantt_chart( $p_metrics, $p_title, $p_subtitle, $p_graph_width = 300, $
                             $t_activity_main->SetPattern( BAND_RDIAG, get_status_color( bug_get_field( $t_bug_id, 'status' ) ) );
                         }
                         $t_activity_main->SetFillColor( get_status_color( bug_get_field( $t_bug_id, 'status' ) ) );
-                        
+                        $t_activity_main->title->SetFont( $t_graph_font, FS_NORMAL, 8 );
                         // Set the constraint if any...
                         foreach( $t_constraints as $t_constraint ){
                             // ... and if possible
@@ -550,6 +550,7 @@ function gantt_chart( $p_metrics, $p_title, $p_subtitle, $p_graph_width = 300, $
                     }
 
                     $t_milestone = new MileStone( $t_row, $t_row_label, graph_date_format( $t_start_date ), $t_extra );
+                    $t_milestone->title->SetFont( $t_graph_font, FS_NORMAL, 8);
                     $t_milestone->mark->SetType( MARK_FILLEDCIRCLE );
                     $t_milestone->mark->SetWidth( $t_size );
                     if( 5 != $t_size ){

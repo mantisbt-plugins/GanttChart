@@ -233,6 +233,7 @@ function gantt_chart_legend( $p_show = true ){
     $graph->legend->SetColumns( $enum_count );
     $graph->legend->SetColor('#4E4E4E','#000000');
     $graph->legend->SetAbsPos(2,2,'left','top');
+    $graph->legend->SetFont(graph_get_font(), FS_NORMAL, 8 );
     $graph->legend->SetHColMargin(2);  
 //    $graph->title->Set("Legend");
   

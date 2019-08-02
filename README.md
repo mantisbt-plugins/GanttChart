@@ -32,12 +32,11 @@ This plugin was developed and tested on MantisBT 2.21.1.
 Extract the release archive to the MantisBT installations plugins folder:
 
     cd /var/www/mantisbt/plugins
-    wget -O GanttChart.zip https://github.com/mantisbt-plugins/Releases/releases/download/v1.0.1/GanttChart.zip
+    wget -O GanttChart.zip https://github.com/mantisbt-plugins/GanttChart/releases/download/v1.0.0/GanttChart.zip
     unzip GanttChart.zip
     rm -f GanttChart.zip
 
 Ensure to use the latest released version number in the download url: [![MantisBT version current](https://app1.spmeesseman.com/projects/plugins/ApiExtend/api/versionbadge/GanttChart/current)](https://app1.spmeesseman.com/projects) (version badge available via the [ApiExtend Plugin](https://github.com/mantisbt-plugins/ApiExtend))
-
 
 Install the plugin using the default installation procedure for a MantisBT plugin in `Manage -> Plugins`.
 

@@ -28,12 +28,12 @@
     "githubAssets": [
         "build\\GanttChart.zip"
     ],
-    "githubUser":        "spmeesseman",
+    "githubUser":        "mantisbt-plugins",
     "historyFile":       "",
     "historyHdrFile":    "",
     "historyLineLen":    80,
     "homePage":          "",
-    "interactive":       "N",
+    "interactive":       "Y",
     "mantisbtPlugin":    "GanttChart.php",
     "mantisbtProject":   "GanttChart",
     "mantisbtRelease":   "Y",
@@ -56,6 +56,7 @@
     "repo":              "https://github.com/mantisbt-plugins/GanttChart.git",
     "skipCommit":        "N",
     "skipDeployPush":    "N",
+    "skipVersionEdits":  "N",
     "testEmailRecip":    "spmeesseman@gmail.com",
     "textEditor":        "notepad",
     "vcTag":             "Y",

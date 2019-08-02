@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-# Edits Copyright (c) 2019 Scott Meesseman
-# Licensed under the MIT License
+# Copyright (c) 2019 Scott Meesseman
+# Licensed under GPL2 
 
 class GanttChartPlugin extends MantisPlugin
 {

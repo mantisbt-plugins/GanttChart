@@ -1,6 +1,6 @@
 # GANTTCHART CHANGE LOG
 
-## Version 2.0.0 (August 1st, 2019)
+## Version 2.0.1 (August 1st, 2019)
 
 ### Initial Release
 

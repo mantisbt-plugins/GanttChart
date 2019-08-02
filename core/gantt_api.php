@@ -42,11 +42,16 @@ if( OFF == plugin_config_get( 'eczlibrary' ) ) {
   if( $t_jpgraph_path !== '' ) {
     set_include_path(get_include_path() . PATH_SEPARATOR . $t_jpgraph_path );
     $ip = get_include_path();
+    require_once( 'jpgraph.php' );
     require_once( 'jpgraph_gantt.php' );
+    require_once( 'jpgraph_line.php' );
     require_once( 'jpgraph_mgraph.php' );
   } else {
+    require_lib( 'jpgraph/jpgraph.php' );
     require_lib( 'jpgraph/jpgraph_gantt.php' );
+    require_lib( 'jpgraph/jpgraph_line.php' );
     require_lib( 'jpgraph/jpgraph_mgraph.php' );
+    require_lib ('jpgraph/jpgraph_bar.php');
   }
 } else {
   require_lib( 'ezc/Base/src/base.php' );
@@ -275,13 +280,22 @@ function gantt_chart_get_height( $p_gantt_chart ){
   
 }
 
+//
+// spm - old plugin used this function which is not defined anywhere
+// investigate later.  for now just return a static font code
+// seems 1-4 are packaged bitmap fonts, 10+ are truetype font refs
+//
+function graph_get_font()
+{
+    return FF_DV_SANSSERIF; //3; //config_get( 'relationship_graph_fontname' );
+}
 
 # --------------------
 function gantt_chart( $p_metrics, $p_title, $p_subtitle, $p_graph_width = 300, $p_graph_height = 380 ) {
     $t_graph_font = graph_get_font();
     $t_metrics = $p_metrics['metrics'];
     $t_range = $p_metrics['range'];
-     
+    
     
     // Diff in weeks of the range:
     $t_60s = 60; // 1 minute
@@ -293,16 +307,16 @@ function gantt_chart( $p_metrics, $p_title, $p_subtitle, $p_graph_width = 300, $
     $t_day = $t_24h * $t_hour;
     $t_week = $t_7d * $t_day;
 
-    $t_gantt_chart_max_rows = plugin_config_get( 'rows_max' );
-    error_check( is_array( $t_metrics ) ? count( $t_metrics ) : 0, $p_title . " (" . $p_subtitle . ")" );
+    $t_gantt_chart_max_rows = plugin_config_get( 'rows_max' );#die('jjjj'.implode(",", $t_metrics ));
+    #error_check( is_array( $t_metrics ) ? count( $t_metrics ) : 0, $p_title . " (" . $p_subtitle . ")" );
   
     if ( plugin_config_get( 'eczlibrary' ) == ON ) {
         // DO NOTHING SINCE eczlibrary DOES NOT SUPPORT GANTT CHART
     } else {
-  
+        
         // A new graph with automatic size
         $graph = new GanttGraph (0, 0, "auto");
-
+        
         $graph->SetShadow();
         // Add title and subtitle
         $graph->title-> Set($p_title);
@@ -678,11 +692,13 @@ function gantt_create_user_chart_subtitle( $p_user_id, $p_project_id = null, $p_
 # Data Extractions
 # --------------------
 
-function gantt_count_summary( $p_project_id, $p_version_name ){
-    return count( gantt_get_issues_and_related_in_version( $p_project_id, $p_version_name ) );
+function gantt_count_summary( $p_project_id, $p_version_name, $p_version_string = "" )
+{
+    return count( gantt_get_issues_and_related_in_version( $p_project_id, $p_version_name, $p_version_string ) );
 }
 
-function gantt_get_issues_and_related_in_version( $p_project_id, $p_version_name ){
+function gantt_get_issues_and_related_in_version( $p_project_id, $p_version_name, $p_version_string = "target_version" )
+{
     $t_bug_table = db_get_table( 'bug' );
     $t_relation_table = db_get_table( 'bug_relationship' );
     $t_bug_datas = array();
@@ -698,7 +714,7 @@ function gantt_get_issues_and_related_in_version( $p_project_id, $p_version_name
     $query = "SELECT sbt.*, $t_relation_table.source_bug_id as parent_issue, dbt.target_version as parent_version FROM $t_bug_table AS sbt
               LEFT JOIN $t_relation_table ON sbt.id=$t_relation_table.destination_bug_id AND $t_relation_table.relationship_type=2
               LEFT JOIN $t_bug_table AS dbt ON dbt.id=$t_relation_table.source_bug_id
-              WHERE sbt.project_id=" . db_param() . " AND sbt.target_version=" . db_param() . " ORDER BY sbt.status ASC, sbt.last_updated DESC";
+              WHERE sbt.project_id=" . db_param() . " AND sbt." . $p_version_string . "=" . db_param() . " ORDER BY sbt.status ASC, sbt.last_updated DESC";
     $t_result = db_query_bound( $query, array( $t_project_id, $t_version_name ) );
 
     // Filter ids according to level access
@@ -731,12 +747,12 @@ function gantt_get_issues_and_related_in_version( $p_project_id, $p_version_name
 
 # --------------------
 # Gives the durations of all the issues concerned by a couple project/version:
-function gantt_create_summary( $p_project_id, $p_version_id, $p_inherited, $p_start_index = -1, $p_length = null ){
+function gantt_create_summary( $p_project_id, $p_version_id, $p_inherited, $p_start_index = -1, $p_length = null, $version_string = 'target_version' ){
     $t_metrics = array();
     $t_dates_arr = array();
     $t_i = 0;
     $t_version_name = version_full_name( $p_version_id, /* showProject */ $p_inherited, $p_project_id );
-    $t_bug_datas = gantt_get_issues_and_related_in_version( $p_project_id, $t_version_name );
+    $t_bug_datas = gantt_get_issues_and_related_in_version( $p_project_id, $t_version_name, $version_string);
     $t_issue_ids = array();
     $t_issue_parents = array();
     
@@ -766,14 +782,13 @@ function gantt_create_summary( $p_project_id, $p_version_id, $p_inherited, $p_st
         }
     }
   
-
     $t_issue_set_ids = array();
     $t_issue_set_levels = array();
     $k = 0;
 
     $t_cycle = false;
     $t_cycle_ids = array();
-
+    
     // Set Parents and levels
     while ( 0 < count( $t_issue_ids ) ) {
         $t_issue_id = $t_issue_ids[$k];

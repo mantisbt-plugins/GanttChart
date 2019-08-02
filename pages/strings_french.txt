@@ -77,7 +77,7 @@ $s_plugin_GanttChart_summary_graphs_per_row = 'Nombre de graphiques à afficher 
 $s_plugin_GanttChart_font = 'Police';
 
 $s_plugin_GanttChart_jpgraph_path = 'Chemin d\'accès système de la bibliothèque JpGraph';
-$s_plugin_GanttChart_jpgraph_path_default = 'Laisser vide pour le réglage par défaut : {mantisroot}/library/jpgraph';
+$s_plugin_GanttChart_jpgraph_path_default = 'Laisser vide pour le réglage par défaut : {mantisroot}/vendor/jpgraph';
 $s_plugin_GanttChart_jpgraph_antialias = 'Anti-alias JpGraph';
 $s_plugin_GanttChart_jpgraph_antialias_info = 'L\'anti-alias améliore l\'apparence visuelle de certains graphiques, au détriment de la performance (jusqu\'à 8x plus lent)';
 

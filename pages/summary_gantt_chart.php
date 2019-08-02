@@ -32,13 +32,14 @@ access_ensure_project_level( config_get( 'view_summary_threshold' ) );
 
 $f_project_id = gpc_get_int( 'project_id', null );
 $f_version_id = gpc_get_int( 'version_id', null );
+$f_version_string  = gpc_get_string( 'v_str', 'target_version' );
 $f_inherited  = gpc_get_bool( 'inherited', true );
 $f_start_index = gpc_get_int( 'start_index', -1 );
 $f_length      = gpc_get_int( 'length', null );
 $f_slice       = gpc_get_int( 'slice', null );
 
 if ( null != $f_project_id && null != $f_version_id ) {
-    $t_metrics = gantt_create_summary( $f_project_id, $f_version_id, $f_inherited, $f_start_index, $f_length );
+    $t_metrics = gantt_create_summary( $f_project_id, $f_version_id, $f_inherited, $f_start_index, $f_length, $f_version_string );
     $t_gantt_chart_title = project_get_name( $f_project_id );
     $t_gantt_chart_subtitle = version_full_name( $f_version_id, /* showProject */ $f_inherited, $f_project_id );
 

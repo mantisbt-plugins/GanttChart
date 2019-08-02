@@ -14,9 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-form_security_validate( 'plugin_gantt_chart_config_edit' );
+form_security_validate( 'plugin_GanttChart_config_edit' );
 
-auth_reauthenticate( );
+auth_reauthenticate();
+
 access_ensure_global_level( config_get( 'manage_plugin_threshold' ) );
 
 $f_show_gantt_roadmap_link = gpc_get_int( 'show_gantt_roadmap_link', ON );

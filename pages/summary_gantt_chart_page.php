@@ -39,7 +39,9 @@ $t_user_id = auth_get_current_user_id();
 
 $t_project_ids = user_get_all_accessible_projects( $t_user_id, $f_project_id);
 
-html_page_top( plugin_lang_get( 'menu', 'GanttChart' ) );
+layout_page_header(plugin_lang_get('menu'));
+layout_page_begin(plugin_page('summary_gantt_chart_page'));
+
 ?>
 
 <?php
@@ -143,5 +145,5 @@ foreach ($p_projects as $t_project) {
 </div><!-- /.container -->
 
 <?php
-html_page_bottom();
+layout_page_end();
 ?>

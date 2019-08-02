@@ -28,10 +28,9 @@
  * @author Alain D'EURVEILHER, alain.deurveilher@gmail.com
  */
 
-$s_plugin_ganttchart_title = 'Gantt Chart';
-$s_plugin_ganttchart_description = 'Gantt charts on project/version about bugs resolution.';
+$s_plugin_GanttChart_title = 'GanttChart';
+$s_plugin_GanttChart_description = 'Gantt charts on demand.';
 
-$s_plugin_GanttChart_title = 'Gantt Chart';
 $s_plugin_GanttChart_menu = 'Gantt Chart Roadmap';
 $s_plugin_GanttChart_config = 'Configuration';
 

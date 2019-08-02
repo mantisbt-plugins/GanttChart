@@ -1,4 +1,10 @@
-# GanttChart CHANGE LOG
+# GANTTCHART CHANGE LOG
+
+## Version 1.0.4 (August 1st, 2019)
+
+### Initial Release
+
+- Initial release after merge to mantisbt-plugins org GanttChart plugin
 
 ## Version 1.0.3 (July 29th, 2019)
 

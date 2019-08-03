@@ -1,5 +1,11 @@
 # GANTTCHART CHANGE LOG
 
+## Version 2.0.3 (August 3rd, 2019)
+
+### Build System
+
+- **ap:** fix broken tgz asset upload
+
 ## Version 2.0.2 (August 3rd, 2019)
 
 ### Build System

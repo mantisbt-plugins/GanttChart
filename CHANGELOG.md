@@ -1,5 +1,11 @@
 # GANTTCHART CHANGE LOG
 
+## Version 2.0.2 (August 3rd, 2019)
+
+### Build System
+
+- **ap:** add gzip tarball to mantisbt and github release assets
+
 ## Version 2.0.1 (August 1st, 2019)
 
 ### Initial Release

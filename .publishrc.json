@@ -27,7 +27,7 @@
     "emailSender":       "",
     "githubRelease":     "Y",
     "githubAssets": [
-        "build\\GanttChart.tgz|GZip Tarball",
+        "build\\GanttChart.tgz",
         "build\\GanttChart.zip"
     ],
     "githubUser":        "mantisbt-plugins",

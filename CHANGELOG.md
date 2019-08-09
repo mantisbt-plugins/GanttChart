@@ -1,5 +1,11 @@
 # GANTTCHART CHANGE LOG
 
+## Version 2.0.4 (August 8th, 2019)
+
+### Bug Fixes
+
+- tgz release package does not contain the plugin directory as the top level
+
 ## Version 2.0.3 (August 3rd, 2019)
 
 ### Build System

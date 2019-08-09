@@ -26,7 +26,7 @@ class GanttChartPlugin extends MantisPlugin
 		$this->description = plugin_lang_get( 'description' );
 		$this->page = 'config';
 
-		$this->version = '2.0.3';
+		$this->version = '2.0.4';
 		$this->requires = array(
 			'MantisCore' => '2.0.1',
 			'MantisGraph' => '2.0.1',

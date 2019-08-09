@@ -10,7 +10,7 @@
         "cmd /c copy /Y LICENSE.txt build\\GanttChart",
         "cmd /c copy /Y GanttChart.php build\\GanttChart",
         "Compress-Archive -Path build\\GanttChart -Update -CompressionLevel Optimal -DestinationPath build\\GanttChart.zip",
-        "tar -czf build/GanttChart.tgz build\\GanttChart",
+        "tar -C build -czf build/GanttChart.tgz GanttChart",
         "cmd /c rmdir /S /Q build\\GanttChart"
     ],
     "changelogFile":     "CHANGELOG.md",

@@ -5,17 +5,16 @@
 [![app-publisher](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-app--publisher-e10000.svg)](https://github.com/spmeesseman/app-publisher)
 [![authors](https://img.shields.io/badge/authors-scott%20meesseman%20--%20alain%20deurveilher-6F02B5.svg?logo=visual%20studio%20code)](https://github.com/spmeesseman)
 
-[![GitHub issues open](https://img.shields.io/github/issues-raw/spmeesseman/GanttChart.svg?maxAge=2592000&logo=github)](https://github.com/mantisbt-plugins/GanttChart/issues)
-[![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/spmeesseman/GanttChart.svg?maxAge=2592000&logo=github)](https://github.com/mantisbt-plugins/GanttChart/issues)
 [![MantisBT issues open](https://app1.spmeesseman.com/projects/plugins/ApiExtend/api/issues/countbadge/GanttChart/open)](https://app1.spmeesseman.com/projects/set_project.php?project=GanttChart&make_default=no&ref=bug_report_page.php)
 [![MantisBT issues closed](https://app1.spmeesseman.com/projects/plugins/ApiExtend/api/issues/countbadge/GanttChart/closed)](https://app1.spmeesseman.com/projects/set_project.php?project=GanttChart&make_default=no&ref=bug_report_page.php)
 [![MantisBT version current](https://app1.spmeesseman.com/projects/plugins/ApiExtend/api/versionbadge/GanttChart/current)](https://app1.spmeesseman.com/projects/set_project.php?project=GanttChart&make_default=no&ref=plugin.php?page=Releases/releases)
 [![MantisBT version next](https://app1.spmeesseman.com/projects/plugins/ApiExtend/api/versionbadge/GanttChart/next)](https://app1.spmeesseman.com/projects/set_project.php?project=GanttChart&make_default=no&ref=plugin.php?page=Releases/releases)
 
-- [Gantt Chart MantisBT Plugin](#Gantt-Chart-MantisBT-Plugin)
+- [GanttChart MantisBT Plugin](#GanttChart-MantisBT-Plugin)
   - [Description](#Description)
   - [Installation](#Installation)
   - [Requirements](#Requirements)
+  - [Issues and Feature Requests](#Issues-and-Feature-Requests)
   - [Usage](#Usage)
   - [Configuration](#Configuration)
   - [MantisBT Patches](#MantisBT-Patches)
@@ -64,6 +63,10 @@ Place the JDGraph runtime directory into the "library" folder of your MantisBT i
                 themes
                 ...
             rssbuilder
+
+## Issues and Feature Requests
+
+Issues and requests should be submitted on my [MantisBT](https://app1.spmeesseman.com/projects/set_project.php?project=ApiExtend&make_default=no&ref=bug_report_page.php) site.
 
 ## Usage
 

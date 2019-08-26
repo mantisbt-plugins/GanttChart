@@ -64,15 +64,16 @@ class GanttChartPlugin extends MantisPlugin
 
     public function menu()
     {
+    	$t_menu = array();
         if (plugin_config_get('show_gantt_roadmap_link') == ON) {
-			return array(
+			$t_menu[] = array(
 				'title'=> plugin_lang_get("title"),
 				'url'=> plugin_page('summary_gantt_chart_page', false, 'GanttChart'),
 				'access_level'=> plugin_config_get('view_threshold_level', REPORTER),
 				'icon'=> 'fa-bar-chart'
 			);
 		}
-        return '';
+		return $t_menu;
     }
 
     function config() {

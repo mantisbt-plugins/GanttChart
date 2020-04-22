@@ -28,11 +28,10 @@
  * @author Alain D'EURVEILHER, alain.deurveilher@gmail.com
  */
 
-$s_plugin_ganttchart_title = 'Diagramme de Gantt';
-$s_plugin_ganttchart_description = 'Diagrammes de Gantt pour les couples projet/version sur les résolutions de bugs.';
-
 $s_plugin_GanttChart_title = 'Diagramme de Gantt';
-$s_plugin_GanttChart_menu_advanced_summary = 'Roadmap de Gantt';
+$s_plugin_GanttChart_description = 'Diagrammes de Gantt pour les couples projet/version sur les résolutions de bugs.';
+
+$s_plugin_GanttChart_menu = 'Roadmap de Gantt';
 $s_plugin_GanttChart_config = 'Configuration';
 
 $s_plugin_GanttChart_show_gantt_roadmap_link = 'Voir Roadmap Gantt';

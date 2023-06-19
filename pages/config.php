@@ -81,7 +81,7 @@ echo '    <div class="widget-main">';
     </tr>
     <tr>
         <td class="category"><?php echo 'memory_limit (minimum required 128M)' ?></td>
-        <td><?php if ( array_key_exists( 'memory_limit', $t_ini ) ) echo get_cfg_var( 'memory_limit' );?></td>
+        <td><?php if ( get_cfg_var( 'memory_limit' ) !== false ) echo get_cfg_var( 'memory_limit' );?></td>
     </tr>
 
     <form id="ganttchart-config-form" action="<?php echo plugin_page( 'config_edit' )?>" method="post">
